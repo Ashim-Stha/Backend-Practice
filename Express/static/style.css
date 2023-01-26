@@ -1,0 +1,22 @@
+ul{
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    
+}
+li{
+    padding-left: 10px;
+}
+.container{
+    
+    height: 400px;
+    width: 400px;
+    
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
