@@ -54,12 +54,41 @@ app.get('/login',(req,res)=>{
 //getting data
 app.use(express.urlencoded());
 
-app.post('/login',(req,res)=>{
-   let name = req.body.name; //getting name data
-   let email = req.body.email;
-   let output = `The name is ${name} and email address is ${email}`;
-   fs.writeFileSync('output.txt',output); //writing input data in a file
-    console.log(req.body);
-    const param = {'message':'Your message has been submitted successfully'}
-    res.render('login.pug',param)
-})
+// app.post('/login',(req,res)=>{
+//    let name = req.body.name; //getting name data
+//    let email = req.body.email;
+//    let output = `The name is ${name} and email address is ${email}`;
+//    fs.writeFileSync('output.txt',output); //writing input data in a file
+//     console.log(req.body);
+//     const param = {'message':'Your message has been submitted successfully'}
+//     res.render('login.pug',param)
+// })
+
+//connecting to database
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://127.0.0.1/ashim', {useNewUrlParser: true, useUnifiedTopology: true});
+
+const loginSchema = new mongoose.Schema({
+    name: String,
+    email: String
+  });
+
+  const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('connected')
+});
+
+  const login = mongoose.model('login', loginSchema);
+
+  //posting to database
+  app.post('/login',(req,res)=>{
+   var loginData = new login(req.body);
+   loginData.save().then(()=>{
+    // res.send('send successfully')
+    res.render('login.pug')
+   }).catch(()=>{
+  res.send('not send');
+   });
+  })
